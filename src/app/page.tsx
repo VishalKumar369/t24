@@ -1,15 +1,29 @@
+import Image from "next/image";
 "use client"
-// import Theme from "@/components/Theme/page";
-// import ChatBot from "@/components/chatbot/page";
+import {MacbookScrollDemo} from "../components/macbook";
+import { GlobeDemo } from "@/components/globe";
+//import Chatbot from "../components/dchatbot";
+
+
 
 export default function Home() {
-  // const {theme,themes,handleTheme} = Theme();
 
+
+
+    
   return (
-    <main
-      className={`flex min-h-screen items-center justify-around bg-primary bg-black `}
-    >
-      {/* // add HomePage Here  */}
+    //flex min-h-screen flex-col items-center justify-between p-24
+    <main className="bg-primary mt-0" >
+      <MacbookScrollDemo />
+      
+      <GlobeDemo />
+      
+      <p className="text-center font-bold text-2xl mt-4">
+        We are all in this together
+      </p>
+     
+
+     
     </main>
   );
 }
