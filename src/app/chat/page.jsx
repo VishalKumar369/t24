@@ -1,27 +1,60 @@
 "use client";
 import Theme from "@/components/Theme/page";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import KeyboardCapslockIcon from "@mui/icons-material/KeyboardCapslock";
 import LoadingSpinner from "@/components/spinner/page";
 
 const Chat = () => {
   const { theme } = Theme();
-  const findData = JSON.parse(localStorage.getItem("chatsHistory"))
-  const [chatHistory, setChatHistory] = useState(findData?findData:[]);
+  const findData = JSON.parse(localStorage.getItem("chatsHistory"));
+  const [chatHistory, setChatHistory] = useState(findData ? findData : []);
   const [prompt, setPrompt] = useState("");
   const [isprompt, setIsPrompt] = useState(false);
   const [error, setError] = useState(null);
+  const [summary, setSummary] = useState(null);
 
-  // const { result, error, handlePrompt } = PromptDesc();
   const addMessage = (message) => {
     setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
-    localStorage.setItem("chatsHistory",JSON.stringify([...chatHistory,message]))
+    localStorage.setItem(
+      "chatsHistory",
+      JSON.stringify([...chatHistory, message])
+    );
+  };
+
+  const getSummary = async () => {
+    if (chatHistory.length === 0) return;
+    setIsPrompt(true);
+
+    const api_url = "http://gigagen.pythonanywhere.com/summarize";
+    const data = {
+      user_input: chatHistory,
+    };
+
+    try {
+      const response = await fetch(api_url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      setSummary(responseData);
+      setIsPrompt(false);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const handlePrompt = async (prompt) => {
-    if(!isprompt){
-      setIsPrompt(true)
+    if (!isprompt) {
+      setIsPrompt(true);
     }
     const api_url = "https://gigagen.pythonanywhere.com/health_query";
     const data = {
@@ -50,7 +83,7 @@ const Chat = () => {
   };
 
   const handleSubmit = () => {
-    if (prompt !== ""){
+    if (prompt !== "") {
       setIsPrompt(true);
       handlePrompt(prompt);
       setPrompt("");
@@ -88,7 +121,6 @@ const Chat = () => {
             src="https://e7.pngegg.com/pngimages/723/59/png-clipart-thought-positive-mental-attitude-smiley-mind-smiley-miscellaneous-face.png"
             alt=""
             className="w-40 bg-cover rounded-lg"
-
           />
           <div className="prompt-inital-heading font-bold text-3xl mt-4">
             How can I Help You ?
@@ -111,7 +143,7 @@ const Chat = () => {
 
           {/* chats */}
           {chatHistory &&
-            chatHistory.map((history,id) => (
+            chatHistory.map((history, id) => (
               <div
                 className="chat my-6 w-full bg-zinc-900 p-6 rounded-md"
                 key={id}
@@ -125,20 +157,49 @@ const Chat = () => {
                 <div className="description pl-10 mt-4  bg-zinc-950 p-6 rounded-lg ">
                   <div className="desc-area text-grey-300 font-medium text-gray-400">
                     <ul>
-                      {(history.desc.response).split(/\d+\./).filter((item) => item !== "").map((point, index) => (
-                        <li className=" mb-1" key={index}><span style={{ marginRight: '5px' }}>•</span> {point} </li>
-                      ))}
+                      {history.desc.response
+                        .split(/\d+\./)
+                        .filter((item) => item !== "")
+                        .map((point, index) => (
+                          <li className=" mb-1" key={index}>
+                            <span style={{ marginRight: "5px" }}>•</span>{" "}
+                            {point}{" "}
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 </div>
                 {error && <p>Error: {error}</p>}
               </div>
             ))}
+          {/* ////////////////////////// */}
 
+          {summary ? (
+            <div className="chat my-6 w-full bg-zinc-900 p-6 rounded-md">
+              <div className="prompt-heading-area w-full flex">Summary:</div>
+              <div className="description pl-10 mt-4  bg-zinc-950 p-6 rounded-lg ">
+                <div className="desc-area text-grey-300 font-medium text-gray-400">
+                  {summary.response}
+                </div>
+              </div>
+              {error && <p>Error: {error}</p>}
+            </div>
+          ) : (
+            <></>
+          )}
           {isprompt && (
             <>
               <LoadingSpinner />
             </>
+          )}
+
+          {chatHistory.length > 0 && (
+            <div
+              className="getSummary cursor-pointer flex items-center hover:text-indigo-600"
+              onClick={getSummary}
+            >
+              Get Summary
+            </div>
           )}
 
           <div className="prompt-input relative w-full flex justify-center my-8">
