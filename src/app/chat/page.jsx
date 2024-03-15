@@ -50,7 +50,7 @@ const Chat = () => {
   };
 
   const handleSubmit = () => {
-    if (prompt !== "") {
+    if (prompt !== ""){
       setIsPrompt(true);
       handlePrompt(prompt);
       setPrompt("");
@@ -78,9 +78,10 @@ const Chat = () => {
 
   return (
     <div
-      className={` w-[100%]  min-h-screen bg-primary theme-${theme} text-white`}
+      className={` w-[100%] flex justify-between min-h-screen bg-primary theme-${theme} text-white`}
     >
-      <div className="prompt-main w-full flex items-center justify-center ">
+      {/* justify-center */}
+      <div className="prompt-main w-full flex items-center justify-center  mx-8">
         <div className="prompt-area w-[60%] flex flex-col items-center justify-center pt-4">
           {/* initial page */}
           <img
@@ -124,8 +125,8 @@ const Chat = () => {
                 <div className="description pl-10 mt-4  bg-zinc-950 p-6 rounded-lg ">
                   <div className="desc-area text-grey-300 font-medium text-gray-400">
                     <ul>
-                      {(history.desc.response).split(/\d+\./).filter((item) => item.trim() !== "").map((point, index) => (
-                        <li className=" mb-1" key={index}><span style={{ marginRight: '5px' }}>•</span> {point.trim()} </li>
+                      {(history.desc.response).split(/\d+\./).filter((item) => item !== "").map((point, index) => (
+                        <li className=" mb-1" key={index}><span style={{ marginRight: '5px' }}>•</span> {point} </li>
                       ))}
                     </ul>
                   </div>
