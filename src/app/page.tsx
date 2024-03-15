@@ -4,18 +4,11 @@ import {MacbookScrollDemo} from "../components/macbook";
 import { GlobeDemo } from "@/components/globe";
 //import Chatbot from "../components/dchatbot";
 
-
-
 export default function Home() {
-
-
-
-    
   return (
     //flex min-h-screen flex-col items-center justify-between p-24
-    <main className="bg-primary mt-0" >
+    <main className="bg-zinc-800 mt-0" >
       <MacbookScrollDemo />
-      
       <GlobeDemo />
       
       <p className="text-center font-bold text-2xl mt-4">
