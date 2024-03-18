@@ -142,7 +142,7 @@ const SpiritualChatBot = () => {
             ))}
           </div>
         </div>
-        <div className="flex-grow p-4 overflow-auto " ref={displayRef}>
+        <div className="flex-grow p-4 overflow-auto " ref={displayRef} >
           {messages.map((message, index) => (
             <>
               {message.sender === "user" ? (
